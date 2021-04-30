@@ -8,7 +8,7 @@ imgAsteroid.src = 'src/image/asteroid.png';
 
 let arrayObstacles = [];
 imgAsteroid.onload = () => {
-    arrayObstacles.push(new Obstacle(800, 300, imgAsteroid));
+    arrayObstacles.push(new Obstacle(300, 300, imgAsteroid));
 }
 
 let nowTime = Date.now();
@@ -32,9 +32,15 @@ function game () {
 }
 
 function update(deltaTime) {
-    for (let obst of arrayObstacles) {
-        obst.move(deltaTime);
-    }
+    // Обработка препятствий
+    arrayObstacles.forEach((elem) => {
+        elem.move(deltaTime);
+    })
+    arrayObstacles = arrayObstacles.filter((elem) => {
+        return elem.xPos + elem.xSize > 0 && elem.yPos + elem.ySize > 0 && elem.yPos < canvas.clientHeight;
+    })
+
+    // Обработка фона
     background.move(deltaTime);
 }
 

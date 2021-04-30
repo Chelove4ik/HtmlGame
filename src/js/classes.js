@@ -2,14 +2,15 @@ export class Obstacle {
     constructor(x, y, image) {
         this.xPos = x;
         this.yPos = y;
-        this.xSpeed = -.1;
+        this.xSpeed = -0.1;
         this.ySpeed = 0;
-        this.size = 20 + getRandomInt(100);
+        this.xSize = 30 + getRandomInt(90);
+        this.ySize = this.xSize.valueOf();  // TODO подумать над надобностью
         this.image = image;
     }
 
     draw() {
-        context.drawImage(this.image, this.xPos, this.yPos, this.size, this.size);
+        context.drawImage(this.image, this.xPos, this.yPos, this.xSize, this.ySize);
     }
 
     move(delta) {
