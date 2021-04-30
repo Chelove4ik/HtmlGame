@@ -8,11 +8,15 @@
 <body>
 
 <div id="wrapper">
-    <canvas id="game" height=600" width="900">
+    <canvas id="game" height=590" width="900">
         Элемент не поддерживается
     </canvas>
 </div>
-<script src="src/js/game.js"></script>
+<script>
+    let canvas = document.getElementById('game');
+    let context = canvas.getContext('2d');
+</script>
+<script src="src/js/game.js" type="module"></script>
 
 </body>
 </html>
