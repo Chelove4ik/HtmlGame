@@ -45,7 +45,7 @@ function helloScreen() {
     context.fillText(" + автострельба", 70, 420)
 
     context.font = "20px canis minor"
-    context.fillText("Score: " + score.toString(),  canvas.clientWidth - 150, 30, 145)
+    context.fillText("Score: " + score.toString(), canvas.clientWidth - 150, 30, 145)
     if (animateHelloScreen)
         requestAnimationFrame(helloScreen);
 }
@@ -94,6 +94,7 @@ export function menuProcess(x, y) {
 }
 
 let createNewAsteroidTimerId;
+
 function startGame() {
     createNewAsteroidTimerId = setTimeout(function createNewAsteroidTimer() {
         arrayObstacles.push(new Obstacle(canvas.clientWidth, getRandomInt(canvas.clientHeight + 50) - 30, imgAsteroid));
@@ -227,7 +228,7 @@ function render() {
     context.font = "20px canis minor";
     context.fillText("Lives: " + player.hp.toString(), 10, 30);
 
-    context.fillText("Score: " + score.toString(),  canvas.clientWidth - 150, 30, 145)
+    context.fillText("Score: " + score.toString(), canvas.clientWidth - 150, 30, 145)
 }
 
 let speedUpForPlayerListener = (event) => {
