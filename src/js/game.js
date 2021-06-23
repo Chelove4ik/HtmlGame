@@ -1,5 +1,5 @@
 import {Obstacle, Background, Player} from './classes.js'
-import {getRandomInt, spawnEnemiesFromLevel, menuClickM, menuClickT} from "./functions.js";
+import {getRandomInt, spawnEnemiesFromLevel, menuClickM, menuClickT, hasCollision} from "./functions.js";
 import {countLoadedRes, imgFon, imgAsteroid} from './images.js'
 
 
@@ -13,7 +13,7 @@ let background = new Background(imgFon);
 let arrayObstacles = [];
 let arrayEnemies = [];
 let arrayBullets = [];
-
+let arrayMyBullets = [];
 
 let timerId = setInterval(() => {
     console.log(countLoadedRes)
@@ -109,8 +109,6 @@ function game() {
     nowTime = Date.now();
     deltaTime = nowTime - lastTime;
 
-    console.log(player)
-
     update(deltaTime);
     render();
 
@@ -139,6 +137,7 @@ function update(deltaTime) {
 
     // Обработка игрока
     player.moveUntilStop(deltaTime);
+    player.fireUntilStop(deltaTime);
     player.checkColliders(arrayBullets);
     player.checkColliders(arrayEnemies);
     player.checkColliders(arrayObstacles);
@@ -148,26 +147,50 @@ function update(deltaTime) {
         elem.move(deltaTime);
         elem.fire(deltaTime);
     });
-    arrayEnemies = arrayEnemies.filter((elem) => {
-        return elem.hp > 0;
-    });
 
     // Обработка пуль
     arrayBullets.forEach((elem) => {
         elem.move(deltaTime);
     });
     arrayBullets = arrayBullets.filter((elem) => {
-        return elem.xPos + elem.xSize > 0 && elem.yPos + elem.ySize > 0 && elem.yPos < canvas.clientHeight;
+        return elem.xPos + elem.xSize > 0;
+    });
+    arrayBullets = arrayBullets.filter((elem) => {
+        return !hasCollision(player, elem);
     });
 
+    arrayMyBullets.forEach((elem) => {
+        elem.move(deltaTime);
+    });
+    arrayMyBullets = arrayMyBullets.filter((elem) => {
+        return elem.xPos < canvas.clientWidth;
+    })
 
+    // ранил ли
+    let deleteIndex = []
+    arrayEnemies.forEach((enemy, index) => {
+        arrayMyBullets.filter((elem) => {
+            if (hasCollision(enemy, elem)) {
+                deleteIndex.push(index);
+                return false;
+            }
+            return true;
+        });
+    });
+
+    deleteIndex.reverse();
+    deleteIndex.forEach((index) => {
+        arrayEnemies.splice(index, 1);
+    });
+
+    // убил ли
+    arrayEnemies = arrayEnemies.filter((elem) => {
+        return elem.hp > 0;
+    });
 }
 
 function render() {
     background.draw();
-
-    context.font = "20px canis minor";
-    context.fillText("Lives: " + player.hp.toString(), 10, 30);
 
     player.draw();
 
@@ -177,16 +200,29 @@ function render() {
     arrayBullets.forEach((elem) => {
         elem.draw();
     });
+    arrayMyBullets.forEach((elem) => {
+        elem.draw();
+    });
+
 
     arrayObstacles.forEach((elem) => {
         elem.draw();
     });
+
+    context.font = "20px canis minor";
+    context.fillText("Lives: " + player.hp.toString(), 10, 30);
+
+    context.fillText("Score: " + score.toString(),  canvas.clientWidth - 150, 30, 145)
 }
 
 let speedUpForPlayerListener = (event) => {
+    if (event.key === ' ')
+        player.canFire = true;
     player.speedUp(event);
 }
 let speedDownForPlayerListener = (event) => {
+    if (event.key === ' ')
+        player.canFire = false;
     player.speedDown(event);
 }
 let mousemoveListener = (event) => {
@@ -213,4 +249,4 @@ let mousedownListener = (event) => {
         helloScreen();
     }
 }
-export {arrayEnemies, arrayBullets, arrayObstacles};
+export {arrayEnemies, arrayBullets, arrayObstacles, arrayMyBullets};

@@ -1,6 +1,6 @@
-import {getRandomInt} from "./functions.js";
-import {arrayBullets} from "./game.js";
-import {imgPlayer} from "./images.js";
+import {getRandomInt, hasCollision} from "./functions.js";
+import {arrayBullets, arrayMyBullets} from "./game.js";
+import {imgBulletPlayer, imgPlayer} from "./images.js";
 
 export class Obstacle {
     constructor(x, y, image) {
@@ -137,6 +137,7 @@ export class Player {
         this.rightSpeed = 0;
         this.normalSpeed = 0.5;
         this.lastTakenDamage = 0;
+        this.canFire = false;
     }
 
     speedUp(event) {
@@ -189,10 +190,18 @@ export class Player {
 
     checkColliders(entityArray) {
         entityArray.forEach((entity) => {
-            if (((this.xPos > entity.xPos && this.xPos < entity.xPos + entity.xSize) || (this.xPos + this.xSize < entity.xPos + entity.xSize && this.xPos + this.xSize > entity.xPos)) && ((this.yPos > entity.yPos && this.yPos < entity.yPos + entity.ySize) || (this.yPos + this.ySize < entity.yPos + entity.ySize && this.yPos + this.ySize > entity.yPos))) {
+            if (hasCollision(this, entity))
                 this.getDamage();
-            }
         });
+    }
+
+    fireUntilStop(delta) {
+        this.lastFire += delta;
+        if (this.canFire && this.lastFire > this.fireSpeed) {
+            this.lastFire = 0;
+            arrayMyBullets.push(new Bullet(this.xPos + this.xSize, this.yPos + this.ySize / 2, imgBulletPlayer));
+            arrayMyBullets[arrayMyBullets.length - 1].xSpeed *= -1;
+        }
     }
 
     draw() {
