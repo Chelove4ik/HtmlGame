@@ -187,6 +187,14 @@ export class Player {
         }
     }
 
+    checkColliders(entityArray) {
+        entityArray.forEach((entity) => {
+            if (((this.xPos > entity.xPos && this.xPos < entity.xPos + entity.xSize) || (this.xPos + this.xSize < entity.xPos + entity.xSize && this.xPos + this.xSize > entity.xPos)) && ((this.yPos > entity.yPos && this.yPos < entity.yPos + entity.ySize) || (this.yPos + this.ySize < entity.yPos + entity.ySize && this.yPos + this.ySize > entity.yPos))) {
+                this.getDamage();
+            }
+        });
+    }
+
     draw() {
         context.drawImage(imgPlayer, this.xPos, this.yPos, this.xSize, this.ySize);
     }
