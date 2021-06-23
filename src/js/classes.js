@@ -1,4 +1,5 @@
 import {getRandomInt} from "./functions.js";
+import {arrayBullets} from "./game.js";
 
 export class Obstacle {
     constructor(x, y, image) {
@@ -41,7 +42,7 @@ export class Background {
 }
 
 export class Enemy {
-    constructor(hp, x, y, image) {
+    constructor(hp, x, y, images) {
         this.hp = hp;
         this.xPos = x;
         this.yPos = y;
@@ -49,10 +50,13 @@ export class Enemy {
         this.ySpeed = (getRandomInt(2000) + 1) / 30000 * (getRandomInt(2) === 0 ? -1 : 1);
         // this.xSize = canvas.clientWidth / 7;
         // this.ySize = canvas.clientHeight / 11;
-        this.xSize = image.width * 1.5;
-        this.ySize = image.height * 1.5;
-        this.image = image;
+        this.image = images[0];
+        this.xSize = this.image.width * 1.5;
+        this.ySize = this.image.height * 1.5;
         this.onField = false;
+        this.fireSpeed = (getRandomInt(10) + 10) * 100;
+        this.lastFire = 0;
+        this.bulletImage = images[1];
     }
 
     move(delta) {
@@ -76,6 +80,40 @@ export class Enemy {
             this.xPos = Math.min(canvas.clientWidth - (canvas.clientWidth - this.xPos), canvas.clientWidth - this.xSize);
             this.xSpeed *= -1
         }
+    }
+
+    draw() {
+        context.drawImage(this.image, this.xPos, this.yPos, this.xSize, this.ySize);
+    }
+
+    getDamage() {
+        this.hp--;
+    }
+
+    fire(delta) {
+        this.lastFire += delta;
+        if (this.lastFire > this.fireSpeed) {
+            this.lastFire = 0;
+            arrayBullets.push(new Bullet(this.xPos, this.yPos, this.bulletImage));
+        }
+    }
+
+}
+
+export class Bullet {
+    constructor(x, y, image) {
+        this.xPos = x;
+        this.yPos = y;
+        this.xSize = image.width;
+        this.ySize = image.height;
+        this.xSpeed = -0.2;
+        this.ySpeed = 0;  // TODO можно удалить
+        this.image = image;
+    }
+
+    move(delta) {
+        this.xPos += delta * this.xSpeed;
+        this.yPos += delta * this.ySpeed;
     }
 
     draw() {

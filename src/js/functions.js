@@ -1,10 +1,12 @@
 import {Enemy} from "./classes.js";
+import {enemiesImagesArray} from "./images.js";
+import {arrayEnemies} from "./game.js";
 
 export function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-export function spawnEnemiesFromLevel(arrayEnemies, enemiesImagesArray, level) {
+export function spawnEnemiesFromLevel(level) {
     if (level < 3) {
         for (let i = 0; i < level + 1; ++i)
             arrayEnemies.push(new Enemy(1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[0]));
