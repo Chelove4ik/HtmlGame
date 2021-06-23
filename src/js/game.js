@@ -51,6 +51,7 @@ function helloScreen() {
 }
 
 function gameoverScreen() {
+    canvas.style.cursor = "auto"
     lastTime = nowTime;
     nowTime = Date.now();
     deltaTime = nowTime - lastTime;
@@ -80,6 +81,7 @@ export function menuProcess(x, y) {
     canvas.removeEventListener("touchstart", menuClickT);
     player = new Player(3, 0, 0);
     animateHelloScreen = false;
+    canvas.style.cursor = "none"
 
     if (keyboard) {
         canvas.addEventListener("keydown", speedUpForPlayerListener);

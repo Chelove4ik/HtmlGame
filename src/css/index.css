@@ -3,6 +3,10 @@
     margin: 0 auto;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     background-image: url("https://news.microsoft.com/wp-content/uploads/prod/sites/46/2020/10/Space_1-1000x563-1.jpg");
     height: 100%;
