@@ -1,6 +1,6 @@
-import {Obstacle, Background, Player} from './classes.js'
+import {Obstacle, Background, Player, Enemy} from './classes.js'
 import {getRandomInt, spawnEnemiesFromLevel, menuClickM, menuClickT, hasCollision} from "./functions.js";
-import {countLoadedRes, imgFon, imgAsteroid} from './images.js'
+import {countLoadedRes, imgFon, imgAsteroid, imgBoss, imgBulletBoss} from './images.js'
 
 
 let nowTime = Date.now();
@@ -16,7 +16,7 @@ let arrayBullets = [];
 let arrayMyBullets = [];
 
 let timerId = setInterval(() => {
-    console.log(countLoadedRes)
+    console.log(countLoadedRes.toString() + '/12')
     if (countLoadedRes === 12) {  // кол-во изображений
         clearInterval(timerId);
         canvas.addEventListener("mousedown", menuClickM)
@@ -43,7 +43,9 @@ function helloScreen() {
     context.fillText("Клавиатура(движение) + space(стрельба)", 70, 260)
     context.fillText("Свайпы/следование за мышью(движение)", 70, 380)
     context.fillText(" + автострельба", 70, 420)
-    console.log("still here")
+
+    context.font = "20px canis minor"
+    context.fillText("Score: " + score.toString(),  canvas.clientWidth - 150, 30, 145)
     if (animateHelloScreen)
         requestAnimationFrame(helloScreen);
 }
@@ -84,6 +86,7 @@ export function menuProcess(x, y) {
         canvas.addEventListener("keyup", speedDownForPlayerListener);
     }
     if (mouse) {
+        player.canFire = true;
         canvas.addEventListener("mousemove", mousemoveListener);
         canvas.addEventListener("touchmove", touchmoveListener);
     }
@@ -113,10 +116,24 @@ function game() {
     render();
 
     if (player.hp === 0) {
-        console.log('zeho hp')
         animationGame = false;
         animateGameoverScreen = true;
         gameoverScreen()
+    }
+
+    if (arrayEnemies.length === 0) {
+        level++;
+        if (level % 3 === 0) {
+            arrayEnemies.push(new Enemy(level, canvas.clientWidth, getRandomInt(canvas.clientHeight), Array(imgBoss, imgBulletBoss), 10));
+            arrayEnemies[0].fireSpeed = Math.max(arrayEnemies[0].fireSpeed - 100 * level, 500);
+            arrayEnemies[0].xSize *= 1.5;
+            arrayEnemies[0].ySize *= 1.5;
+        } else {
+            spawnEnemiesFromLevel(level);
+        }
+
+        if (level % 3 === 1)
+            player.hp++;
     }
 
     if (animationGame)
@@ -167,25 +184,23 @@ function update(deltaTime) {
     })
 
     // ранил ли
-    let deleteIndex = []
     arrayEnemies.forEach((enemy, index) => {
         arrayMyBullets.filter((elem) => {
             if (hasCollision(enemy, elem)) {
-                deleteIndex.push(index);
+                arrayEnemies[index].hp--;
                 return false;
             }
             return true;
         });
     });
 
-    deleteIndex.reverse();
-    deleteIndex.forEach((index) => {
-        arrayEnemies.splice(index, 1);
-    });
-
     // убил ли
     arrayEnemies = arrayEnemies.filter((elem) => {
-        return elem.hp > 0;
+        if (elem.hp <= 0) {
+            score += elem.cost;
+            return false
+        }
+        return true;
     });
 }
 
@@ -242,6 +257,7 @@ let mousedownListener = (event) => {
         arrayEnemies = [];
         clearTimeout(createNewAsteroidTimerId);
         player.hp = 3;
+        player.canFire = false;
         level = 1;
         canvas.addEventListener("mousedown", menuClickM)
         canvas.addEventListener("touchstart", menuClickT)

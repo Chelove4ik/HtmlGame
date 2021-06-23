@@ -43,7 +43,7 @@ export class Background {
 }
 
 export class Enemy {
-    constructor(hp, x, y, images) {
+    constructor(hp, x, y, images, cost) {
         this.hp = hp;
         this.xPos = x;
         this.yPos = y;
@@ -58,6 +58,7 @@ export class Enemy {
         this.fireSpeed = (getRandomInt(10) + 10) * 100;
         this.lastFire = 0;
         this.bulletImage = images[1];
+        this.cost = cost;
     }
 
     move(delta) {

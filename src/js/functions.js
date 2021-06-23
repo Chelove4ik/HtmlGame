@@ -9,27 +9,27 @@ export function getRandomInt(max) {
 export function spawnEnemiesFromLevel(level) {
     if (level < 3) {
         for (let i = 0; i < level + 1; ++i)
-            arrayEnemies.push(new Enemy(1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[0]));
-    } else if (level < 5) {
+            arrayEnemies.push(new Enemy(1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[0], 2));
+    } else if (level < 6) {
         for (let i = 0; i < level; ++i)
-            arrayEnemies.push(new Enemy(2, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[1]));
-    } else if (level < 7) {
-        for (let i = 0; i < level - 2; ++i)
-            arrayEnemies.push(new Enemy(3, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[2]));
+            arrayEnemies.push(new Enemy(2, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[1], 4));
     } else if (level < 9) {
+        for (let i = 0; i < level - 2; ++i)
+            arrayEnemies.push(new Enemy(3, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[2], 6));
+    } else if (level < 12) {
         for (let i = 0; i < level / 2; ++i) {
             let rand = getRandomInt(3);
-            arrayEnemies.push(new Enemy(rand + 1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[rand]));
+            arrayEnemies.push(new Enemy(rand + 1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[rand], (rand + 1) * 2));
         }
     } else {
         for (let i = 0; i < level / 2; ++i) {
             let rand = getRandomInt(3);
-            arrayEnemies.push(new Enemy(rand + 1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[rand]));
+            arrayEnemies.push(new Enemy(rand + 1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[rand], (rand + 1) * 2));
         }
         setTimeout(() => {
             for (let i = 0; i < level / 2; ++i) {
                 let rand = getRandomInt(3);
-                arrayEnemies.push(new Enemy(rand + 1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[rand]));
+                arrayEnemies.push(new Enemy(rand + 1, canvas.clientWidth, getRandomInt(canvas.clientHeight), enemiesImagesArray[rand], (rand + 1) * 2));
             }
         }, 13 * 1000);
     }
