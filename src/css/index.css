@@ -2,3 +2,8 @@
     width: 900px;
     margin: 0 auto;
 }
+
+@font-face {
+    font-family: 'canis minor';
+    src: url("../fonts/canis minor.ttf");
+}

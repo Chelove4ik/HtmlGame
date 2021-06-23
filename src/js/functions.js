@@ -1,6 +1,6 @@
 import {Enemy} from "./classes.js";
 import {enemiesImagesArray} from "./images.js";
-import {arrayEnemies} from "./game.js";
+import {arrayEnemies, menuProcess} from "./game.js";
 
 export function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -34,3 +34,17 @@ export function spawnEnemiesFromLevel(level) {
         }, 13 * 1000);
     }
 }
+
+export function menuClickM(event) {
+    let x = event.offsetX / canvas.clientWidth;
+    let y = event.offsetY / canvas.clientHeight;
+
+    menuProcess(x, y);
+}
+export function menuClickT(event) {
+    let x = (event.touches[0].pageX - canvas.offsetLeft) / canvas.clientWidth;
+    let y = (event.touches[0].pageY - canvas.offsetTop) / canvas.clientHeight;
+
+    menuProcess(x, y);
+}
+
