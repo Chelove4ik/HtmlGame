@@ -1,4 +1,4 @@
-import {Obstacle, Background} from './classes.js'
+import {Obstacle, Background, Enemy} from './classes.js'
 import {getRandomInt} from "./functions.js";
 
 let countLoadedRes = 0  // количество загруженных изображений
@@ -9,28 +9,43 @@ imgFon.src = 'src/image/background.jpg';
 let imgAsteroid = new Image();
 imgAsteroid.src = 'src/image/asteroid.png';
 
-imgAsteroid.onload = () => {
-    // arrayObstacles.push(new Obstacle(canvas.clientWidth, getRandomInt(canvas.clientHeight + 50) - 30, imgAsteroid));
-    countLoadedRes++;
-}
+let imgEnemy1 = new Image();
+imgEnemy1.src = 'src/image/Ship2.png'
+let imgEnemy2 = new Image();
+imgEnemy2.src = 'src/image/Ship3.png'
+let imgEnemy3 = new Image();
+imgEnemy3.src = 'src/image/Ship4.png'
+
+let imgBoss = new Image();
+imgBoss.src = 'src/image/Ship6.png'
+
+Array(imgFon, imgAsteroid, imgEnemy1, imgEnemy2, imgEnemy3, imgBoss).forEach(item => {
+    item.onload = () => {
+        countLoadedRes++;
+    };
+});
+
+let enemiesImagesArray = Array(imgEnemy1, imgEnemy2, imgEnemy3);
 
 let nowTime = Date.now();
 let lastTime, deltaTime;
 
 let background = new Background(imgFon);
 
-imgFon.onload = () => {
-    countLoadedRes++;
-}
-let arrayObstacles = []
+let arrayObstacles = [];
+let arrayEnemies = [];
+
 
 let timerId = setInterval(() => {
-    if (countLoadedRes === 2) {  // кол-во изображений
+    if (countLoadedRes === 6) {  // кол-во изображений
         clearInterval(timerId);
         let createNewAsteroidTimerId = setTimeout(function createNewAsteroidTimer() {
             arrayObstacles.push(new Obstacle(canvas.clientWidth, getRandomInt(canvas.clientHeight + 50) - 30, imgAsteroid));
             createNewAsteroidTimerId = setTimeout(createNewAsteroidTimer, getRandomInt(10) * 1000);
         });
+
+        arrayEnemies.push(new Enemy(1, canvas.clientWidth, 300, enemiesImagesArray[getRandomInt(3)]));
+
         game();
     }
 });
@@ -58,12 +73,23 @@ function update(deltaTime) {
 
     // Обработка фона
     background.move(deltaTime);
+
+    // Обработка противников
+    arrayEnemies.forEach((elem) => {
+        elem.move(deltaTime);
+    });
+    // arrayEnemies = arrayEnemies.filter((elem) => {
+    //     return elem.xPos + elem.xSize > 0 && elem.yPos + elem.ySize > 0 && elem.yPos < canvas.clientHeight;
+    // });
 }
 
 function render() {
     background.draw();
 
-    for (let obst of arrayObstacles) {
-        obst.draw();
-    }
+    arrayObstacles.forEach((elem) => {
+        elem.draw();
+    });
+    arrayEnemies.forEach((elem) => {
+        elem.draw();
+    });
 }
