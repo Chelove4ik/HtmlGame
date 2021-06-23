@@ -1,5 +1,5 @@
-import {Obstacle, Background, Enemy} from './classes.js'
-import {getRandomInt} from "./functions.js";
+import {Obstacle, Background} from './classes.js'
+import {getRandomInt, spawnEnemiesFromLevel} from "./functions.js";
 
 let countLoadedRes = 0  // количество загруженных изображений
 
@@ -29,6 +29,7 @@ let enemiesImagesArray = Array(imgEnemy1, imgEnemy2, imgEnemy3);
 
 let nowTime = Date.now();
 let lastTime, deltaTime;
+let level = 1;
 
 let background = new Background(imgFon);
 
@@ -38,18 +39,19 @@ let arrayEnemies = [];
 
 let timerId = setInterval(() => {
     if (countLoadedRes === 6) {  // кол-во изображений
-        clearInterval(timerId);
-        let createNewAsteroidTimerId = setTimeout(function createNewAsteroidTimer() {
-            arrayObstacles.push(new Obstacle(canvas.clientWidth, getRandomInt(canvas.clientHeight + 50) - 30, imgAsteroid));
-            createNewAsteroidTimerId = setTimeout(createNewAsteroidTimer, getRandomInt(10) * 1000);
-        });
-
-        arrayEnemies.push(new Enemy(1, canvas.clientWidth, 300, enemiesImagesArray[getRandomInt(3)]));
-
-        game();
+        startGame();
     }
 });
 
+function startGame() {
+    clearInterval(timerId);
+    let createNewAsteroidTimerId = setTimeout(function createNewAsteroidTimer() {
+        arrayObstacles.push(new Obstacle(canvas.clientWidth, getRandomInt(canvas.clientHeight + 50) - 30, imgAsteroid));
+        createNewAsteroidTimerId = setTimeout(createNewAsteroidTimer, getRandomInt(10) * 1000);
+    });
+    spawnEnemiesFromLevel(arrayEnemies, enemiesImagesArray, level);
+    game();
+}
 
 // Основной игровой цикл
 function game() {
