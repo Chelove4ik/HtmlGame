@@ -1,5 +1,9 @@
 #wrapper {
     width: 900px;
+    margin: 10px auto;
+}
+
+#game {
     margin: 0 auto;
 }
 
@@ -18,4 +22,22 @@ body {
 @font-face {
     font-family: 'canis minor';
     src: url("../fonts/canis minor.ttf");
+}
+
+@media screen and (max-height: 600px) {
+    #game {
+        height: 500px;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    #game {
+        height: 400px;
+    }
+}
+
+@media screen and (max-height: 400px) {
+    #game {
+        height: 300px;
+    }
 }

@@ -41,7 +41,7 @@ function helloScreen() {
     context.fillStyle = "white"
     context.fillText("Выберите управление: ", 70, 100);
     context.fillText("Клавиатура(движение) + space(стрельба)", 70, 260)
-    context.fillText("Свайпы/следование за мышью(движение)", 70, 380)
+    context.fillText("Следование за мышью/пальцем(движение)", 70, 380)
     context.fillText(" + автострельба", 70, 420)
 
     context.font = "20px canis minor"
