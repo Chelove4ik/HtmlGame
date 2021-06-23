@@ -1,3 +1,5 @@
+import {getRandomInt} from "./functions.js";
+
 export class Obstacle {
     constructor(x, y, image) {
         this.xPos = x;
@@ -39,6 +41,3 @@ export class Background {
 }
 
 
-function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-}
